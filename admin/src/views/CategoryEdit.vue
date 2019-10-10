@@ -40,14 +40,14 @@ export default {
       //新建和编辑保存的功能
       //保存的时候做条件判断，如果有id，就执行put方法，没有就post新建分类
       if (this.id) {
-        await this.$http.put(`categories/${this.id}`, this.model)
+        await this.$http.put(`rest/categories/${this.id}`, this.model)
         this.$router.push('/categories/list')
         this.$message({
           message: '修改成功',
           type: 'success'
         })
       } else {
-        await this.$http.post('categories', this.model)
+        await this.$http.post('rest/categories', this.model)
         this.$router.push('/categories/list')
         this.$message({
           message: '创建成功',
@@ -57,12 +57,12 @@ export default {
 
     },
     async fetch () {
-      const res = await this.$http.get(`categories/${this.id}`)
+      const res = await this.$http.get(`rest/categories/${this.id}`)
       this.model = res.data
     },
     //获取上级菜单列表，上级菜单列表的数量就是分类列表的数量
     async fetchParentOptions () {
-      const res = await this.$http.get(`categories`)
+      const res = await this.$http.get(`rest/categories`)
       this.parentOptions = res.data
     }
   },
