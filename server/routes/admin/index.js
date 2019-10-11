@@ -15,7 +15,6 @@ module.exports = app => {
 
   // 定义新增分类api
   router.post('/', async (req, res) => {
-
     const model = await req.Model.create(req.body)
     res.send(model)
   })
@@ -47,6 +46,20 @@ module.exports = app => {
   router.get('/:id', async (req, res) => {
     const model = await req.Model.findById(req.params.id)
     res.send(model)
+  })
+
+
+  //定义图片上传接口
+  //引入multer包
+  const multer = require('multer')
+  //muter接收一个options对象，dest属性告诉multer要将上传文件保存在哪
+  const upload = multer({ dest: __dirname + '/../../uploads' })
+  //.single方法表示处理单个文件上传，single(fieldname)表示接受一个以 fieldname 命名的文件。这个文件的信息保存在 req.file。
+  app.post('/admin/api/upload', upload.single('file'), async (req, res) => {
+    const file = req.file//本身req没有file,是用upload中间件使file挂载到req上，req.file就是file文件的信息
+    //构造图片的url,返回给前端用于展示图片
+    file.url = `http://localhost:3000/uploads/${file.filename}`
+    res.send(file)
   })
 }
 
