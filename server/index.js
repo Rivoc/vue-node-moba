@@ -4,7 +4,7 @@ const app = express()
 
 app.use(express.json())//解析请求体
 app.use(require('cors')())//解决跨域
-app.use('/uploads', express.static(__dirname + '/uploads'))//静态资源托管，让、upload路径下的文件都可以被访问到
+app.use('/uploads', express.static(__dirname + '/uploads'))//静态资源托管，让upload路径下的文件都可以被访问到
 app.listen(3000, () => {
   console.log('正在监听')
 })
