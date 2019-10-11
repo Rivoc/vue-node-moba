@@ -7,6 +7,8 @@ import ItemEdit from './views/ItemEdit.vue'
 import ItemList from './views/ItemList'
 import HeroEdit from './views/HeroEdit.vue'
 import HeroList from './views/HeroList'
+import ArticleEdit from './views/ArticleEdit.vue'
+import ArticleList from './views/ArticleList'
 
 
 Vue.use(Router)
@@ -18,6 +20,7 @@ export default new Router({
       name: 'Main',
       component: Main,
       children: [
+        //分类路由
         {
           path: '/categories/create',
           component: CategoryEdit
@@ -34,7 +37,7 @@ export default new Router({
         },
 
 
-
+        //物品(装备）路由
         {
           path: '/items/create',
           component: ItemEdit
@@ -50,6 +53,8 @@ export default new Router({
           props: true
         },
 
+
+        //英雄编辑路由
         {
           path: '/heroes/create',
           component: HeroEdit
@@ -58,13 +63,29 @@ export default new Router({
           path: '/heroes/list',
           component: HeroList
         },
+
         {
-          //把变量id注入到CategoryEdit组件中，组件通过props接收,这样做的好处是页面可以和路由尽可能地解耦
           path: '/heroes/edit/:id',
           component: HeroEdit,
           props: true
-        }
+        },
 
+
+        //文章路由
+        {
+          path: '/articles/create',
+          component: ArticleEdit
+        },
+        {
+          path: '/articles/list',
+          component: ArticleList
+        },
+        {
+
+          path: '/articles/edit/:id',
+          component: ArticleEdit,
+          props: true
+        }
 
       ]
     },
