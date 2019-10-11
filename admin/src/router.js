@@ -9,6 +9,8 @@ import HeroEdit from './views/HeroEdit.vue'
 import HeroList from './views/HeroList'
 import ArticleEdit from './views/ArticleEdit.vue'
 import ArticleList from './views/ArticleList'
+import AdEdit from './views/AdEdit.vue'
+import AdList from './views/AdList'
 
 
 Vue.use(Router)
@@ -85,7 +87,25 @@ export default new Router({
           path: '/articles/edit/:id',
           component: ArticleEdit,
           props: true
-        }
+        },
+
+
+
+        //广告路由
+        {
+          path: '/ads/create',
+          component: AdEdit
+        },
+        {
+          path: '/ads/list',
+          component: AdList
+        },
+        {
+
+          path: '/ads/edit/:id',
+          component: AdEdit,
+          props: true
+        },
 
       ]
     },
