@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 
-
+app.set('secret', 'asdsadasd')
 app.use(express.json())//解析请求体
 app.use(require('cors')())//解决跨域
 app.use('/uploads', express.static(__dirname + '/uploads'))//静态资源托管，让upload路径下的文件都可以被访问到

@@ -11,12 +11,16 @@ import ArticleEdit from './views/ArticleEdit.vue'
 import ArticleList from './views/ArticleList'
 import AdEdit from './views/AdEdit.vue'
 import AdList from './views/AdList'
+import AdminUserEdit from './views/AdminUserEdit.vue'
+import AdminUserList from './views/AdminUserList'
+import Login from './views/Login'
 
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
+    { path: '/login', name: 'login', component: Login },
     {
       path: '/',
       name: 'Main',
@@ -106,6 +110,25 @@ export default new Router({
           component: AdEdit,
           props: true
         },
+
+
+
+        //管理员路由
+        {
+          path: '/admin_user/create',
+          component: AdminUserEdit
+        },
+        {
+          path: '/admin_user/list',
+          component: AdminUserList
+        },
+        {
+
+          path: '/admin_user/edit/:id',
+          component: AdminUserEdit,
+          props: true
+        },
+
 
       ]
     },
