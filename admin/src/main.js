@@ -5,7 +5,20 @@ import router from './router'
 import http from './http'
 Vue.prototype.$http = http
 Vue.config.productionTip = false
-
+Vue.mixin({
+  computed: {
+    uploadUrl () {
+      return this.$http.defaults.baseURL + '/upload'
+    }
+  },
+  methods: {
+    getAuthHeaders () {
+      return {
+        Authorization: localStorage.token || ''
+      }
+    }
+  }
+})
 new Vue({
   router,
   render: h => h(App)

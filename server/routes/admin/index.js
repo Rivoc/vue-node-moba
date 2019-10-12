@@ -8,25 +8,32 @@ module.exports = app => {
   })
   const jwt = require('jsonwebtoken')
   const AdminUser = require('../../models/AdminUser')
-  const assert = require('http-assert')
-  app.use('/admin/api/rest/:resource', async (req, res, next) => {
-    //小写复数转大写单数
-    const modelName = require('inflection').classify(req.params.resource)
-    //将model挂载到req上
-    req.Model = require(`../../models/${modelName}`)
-    next()
-  }, router)//挂载子路由
+  // const assert = require('http-assert')
+  //token校验中间件，权限验证
+  const authMiddleware = require('../../Middleware/authMiddleware')()
+  //资源中间件，用来查找并引入模型
+  const resource = require('../../Middleware/resource')()
+
+
+
+  //资源路由，加了两个中间件，先看用户是否存在，再看模型是否存在，最后挂载路由
+  app.use('/admin/api/rest/:resource',
+    authMiddleware,
+    resource,
+    router)//挂载子路由
 
   // 定义新增资源api
   router.post('/', async (req, res) => {
     const model = await req.Model.create(req.body)
     res.send(model)
   })
+
   //定义修改资源api
   router.put('/:id', async (req, res) => {
     const model = await req.Model.findByIdAndUpdate(req.params.id, req.body)
     res.send(model)
   })
+
   //定义删除资源api
   router.delete('/:id', async (req, res) => {
     const model = await req.Model.findByIdAndDelete(req.params.id)
@@ -35,41 +42,23 @@ module.exports = app => {
     })
   })
   //定义获取列表资源api
-  router.get('/',
-    async (req, res, next) => {
-      //校验用户是否登录
-      //提取token,首先将token转为字符串，用空格分割字符串，然后抛出最后一项，即token
-      // const token = String(req.headers.Authorization || '').split(' ').pop()
-
-      const token = String(req.headers.authorization || '')
-
-
-      //找到用户
-      assert(token, 401, '请提供jwt token')
-      const { id } = jwt.verify(token, app.get('secret'))
-
-      //挂载到req上
-      assert(id, 401, '无效的jwt token')
-      req.user = await AdminUser.findById(id)
-      //如果token不存在，解析id不存在，根据id找到的用户也不存在，就返回错误
-      assert(req.user, 401, '请先登录')
-      await next()
-    },
-    async (req, res) => {
-      const queryOptions = {}
-      if (req.Model.modelName === 'Category') {
-        queryOptions.populate = 'parent'
-      }
-      const items = await req.Model.find().setOptions(queryOptions).limit(10)
+  router.get('/', async (req, res) => {
+    const queryOptions = {}
+    if (req.Model.modelName === 'Category') {
+      queryOptions.populate = 'parent'
+    }
+    const items = await req.Model.find().setOptions(queryOptions).limit(10)
+    res.send(items)
+  })
 
 
-      res.send(items)
-    })
+
   //定义详情资源api
   router.get('/:id', async (req, res) => {
     const model = await req.Model.findById(req.params.id)
     res.send(model)
   })
+
 
 
   //定义图片上传接口
@@ -78,12 +67,13 @@ module.exports = app => {
   //muter接收一个options对象，dest属性告诉multer要将上传文件保存在哪
   const upload = multer({ dest: __dirname + '/../../uploads' })
   //.single方法表示处理单个文件上传，single(fieldname)表示接受一个以 fieldname 命名的文件。这个文件的信息保存在 req.file。
-  app.post('/admin/api/upload', upload.single('file'), async (req, res) => {
+  app.post('/admin/api/upload', authMiddleware, upload.single('file'), async (req, res) => {
     const file = req.file//本身req没有file,是用upload中间件使file挂载到req上，req.file就是file文件的信息
     //构造图片的url,返回给前端用于展示图片
     file.url = `http://localhost:3000/uploads/${file.filename}`
     res.send(file)
   })
+
 
 
   //定义登录接口,进行校验
@@ -118,14 +108,17 @@ module.exports = app => {
     res.send({ token })
 
 
-    //错误处理函数
-    // assert粗暴的抛出了异常，捕获这个异常，然后把错误信息已json的形式发给后端
-    app.use(async (err, req, res, next) => {
-      //捕获所有异常，可能没有状态码
-      res.status(err.statusCode || 500).send({
-        message: err.message
-      })
+  })
+
+  //错误处理函数
+  // assert粗暴的抛出了异常，捕获这个异常，然后把错误信息已json的形式发给后端
+  app.use(async (err, req, res, next) => {
+    //捕获所有异常，可能没有状态码
+    res.status(err.statusCode || 500).send({
+      message: err.message
     })
   })
 }
+
+
 

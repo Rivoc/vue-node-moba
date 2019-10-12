@@ -121,7 +121,8 @@
 使用方法
 this.$set(Object, key, value)-->
                 <el-upload class="avatar-uploader"
-                           :action="$http.defaults.baseURL +'/upload'"
+                           :action=" uploadUrl"
+                           :headers="getAuthHeaders()"
                            :show-file-list="false"
                            :on-success="res=>$set(item,'icon',res.url)">
                   <img v-if="item.icon"

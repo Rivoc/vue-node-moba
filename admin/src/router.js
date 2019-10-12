@@ -18,9 +18,12 @@ import Login from './views/Login'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
-    { path: '/login', name: 'login', component: Login },
+    {
+      path: '/login', name: 'login', component: Login,
+      meta: { isPublic: true }
+    },
     {
       path: '/',
       name: 'Main',
@@ -142,3 +145,13 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  //如果没带token要跳转到需要token的页面，就跳转到登录页面
+  if (!to.meta.isPublic && !localStorage.token) {
+    Vue.prototype.$message.error('请先登录')
+    return next('/login')
+  }
+  next()
+})
+export default router
