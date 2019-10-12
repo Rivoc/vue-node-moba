@@ -66,7 +66,8 @@
       </el-header>
 
       <el-main>
-        <router-view></router-view>
+        <!-- 点击编辑在编辑页面录好数据再点击新建，发现数据存在，因为两者是同一个组件，为了避免这种情况，使用key区分 -->
+        <router-view :key=$route.path></router-view>
 
       </el-main>
     </el-container>

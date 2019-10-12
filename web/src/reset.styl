@@ -1,0 +1,160 @@
+*{
+  box-sizing:border-box;
+  outline:none;
+}
+html{
+  color:#222;
+}
+body{
+  margin:0;
+  padding:0;
+  font-family:Arial,Helvetica,sans-serif;
+ 
+  background-color:#f1f1f1;
+}
+a{
+  color:#999
+}
+button{
+  border:none;
+  border-radius: 3px
+}
+.border-right{
+  border-right:3px solid #e9ecee
+  }
+.w100{
+  width:100%;
+  }
+.h100{
+  height:100%
+  }
+
+//定义颜色工具类
+colors={
+  'theme-color':#db9e3f,
+  'black':#171823,
+  'white':#fff,
+  'grey-dark':#ededed,
+  'grey-light':#f9f9f9,
+  'grey':#999,
+  'dark':#212222
+  }
+
+
+for name,color in colors{
+  .text-{name}{
+      color:color
+    }
+  .bg-{name}{
+    background-color:color
+    }
+
+}
+  
+
+//定义文本对齐工具类
+for i in left center right
+  .text-{i}{
+    text-align: i
+    }
+
+
+//定义字体大小工具类
+base-font-size=1rem,
+.fs-lg{
+  font-size:0.26rem}
+font-size={
+  'xs':0.12,  //12px
+  'sm':0.16,//16px
+  'md':0.24,       //24px
+  'lg':0.26,   //26px
+  'xl':0.28,   //28px
+  'xxl':0.32//32px
+}
+
+for size-key,size in font-size{
+  .fs-{size-key}{
+    font-size:size*base-font-size;
+    }
+}
+
+//定义flex布局工具类
+.d-flex{
+  display:flex;
+}
+.flex-column{
+  flex-direction:column
+  }
+.flex-1{
+  flex:1
+  }
+.flex-wrap{
+  flex-wrap:wrap
+  }
+flex-jc={
+  'start':flex-start,
+  'end':flex-end,
+  'center':fcenter,
+  'between':space-between,
+  'around':space-around
+}
+for key,value in flex-jc
+  .jc-{key}{
+    justify-content: value;
+    }
+flex-ai={
+  'start':flex-start,
+  'end':flex-end,
+  'center':center,
+  'stretch':stretch
+}
+for key,value in flex-ai
+  .ai-{key}{
+    align-items: value;
+    }
+
+//定义边距工具类
+spacing-types={
+  'm':margin,
+  "p":padding
+}
+spacing-directions={
+  't':top,
+  // 'r':right,
+  'b':bottom,
+  // 'l':left
+}
+spacing-base-size=1rem;
+spacing-sizes={
+  '0':0,
+  "1":0.1,
+  '2':0.15,
+  '3':0.2,
+  '4':0.25,
+  '5':0.3
+}
+
+//三层循环，.m-t-1格式的类，表示margin-top:xx
+//
+for typekey,type in spacing-types{
+  for directionKey,direction in spacing-directions{
+    for sizekey,size in spacing-sizes{
+        .{typekey}-{directionKey}-{sizekey}{
+            {type}-{direction}:size * spacing-base-size;
+      }
+    } 
+  }
+}
+//mx-1，my-1格式的类，表示水平方向的边距
+for typekey, type in spacing-types{
+  for sizekey, size in spacing-sizes{
+    .{typekey}x-{sizekey}{
+      {type}-left: size * spacing-base-size;
+      {type}-right: size * spacing-base-size;
+    }
+     .{typekey}y-{sizekey}{
+      {type}-top: size * spacing-base-size;
+      {type}-bottom: size * spacing-base-size;
+    }
+  }
+}
