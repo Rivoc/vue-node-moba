@@ -115,16 +115,16 @@ export default new Router({
 
         //管理员路由
         {
-          path: '/admin_user/create',
+          path: '/admin_users/create',
           component: AdminUserEdit
         },
         {
-          path: '/admin_user/list',
+          path: '/admin_users/list',
           component: AdminUserList
         },
         {
 
-          path: '/admin_user/edit/:id',
+          path: '/admin_users/edit/:id',
           component: AdminUserEdit,
           props: true
         },

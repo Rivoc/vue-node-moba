@@ -1,10 +1,14 @@
 //admin用到的所有api
 module.exports = app => {
+
   const express = require('express')
   //定义子路由,这个子路由有增删改查各种方法
   const router = express.Router({
     mergeParams: true
   })
+  const jwt = require('jsonwebtoken')
+  const AdminUser = require('../../models/AdminUser')
+  const assert = require('http-assert')
   app.use('/admin/api/rest/:resource', async (req, res, next) => {
     //小写复数转大写单数
     const modelName = require('inflection').classify(req.params.resource)
@@ -13,36 +17,55 @@ module.exports = app => {
     next()
   }, router)//挂载子路由
 
-  // 定义新增分类api
+  // 定义新增资源api
   router.post('/', async (req, res) => {
     const model = await req.Model.create(req.body)
     res.send(model)
   })
-  //定义修改分类api
+  //定义修改资源api
   router.put('/:id', async (req, res) => {
     const model = await req.Model.findByIdAndUpdate(req.params.id, req.body)
     res.send(model)
   })
-  //定义删除分类api
+  //定义删除资源api
   router.delete('/:id', async (req, res) => {
     const model = await req.Model.findByIdAndDelete(req.params.id)
     res.send({
       success: true
     })
   })
-  //定义分类列表api
-  router.get('/', async (req, res) => {
-    const queryOptions = {}
-    if (req.Model.modelName === 'Category') {
-      queryOptions.populate = 'parent'
-    }
-    const items = await req.Model.find().setOptions(queryOptions).limit(10)
-    //parent本是一个普通的id字符串，但在建模的时候将parent做了关联
-    //所以用populate方法便可查到parent id对应的那一行数据的所有信息
+  //定义获取列表资源api
+  router.get('/',
+    async (req, res, next) => {
+      //校验用户是否登录
+      //提取token,首先将token转为字符串，用空格分割字符串，然后抛出最后一项，即token
+      // const token = String(req.headers.Authorization || '').split(' ').pop()
 
-    res.send(items)
-  })
-  //定义分类详情api
+      const token = String(req.headers.authorization || '')
+
+
+      //找到用户
+      assert(token, 401, '请提供jwt token')
+      const { id } = jwt.verify(token, app.get('secret'))
+
+      //挂载到req上
+      assert(id, 401, '无效的jwt token')
+      req.user = await AdminUser.findById(id)
+      //如果token不存在，解析id不存在，根据id找到的用户也不存在，就返回错误
+      assert(req.user, 401, '请先登录')
+      await next()
+    },
+    async (req, res) => {
+      const queryOptions = {}
+      if (req.Model.modelName === 'Category') {
+        queryOptions.populate = 'parent'
+      }
+      const items = await req.Model.find().setOptions(queryOptions).limit(10)
+
+
+      res.send(items)
+    })
+  //定义详情资源api
   router.get('/:id', async (req, res) => {
     const model = await req.Model.findById(req.params.id)
     res.send(model)
@@ -64,13 +87,14 @@ module.exports = app => {
 
 
   //定义登录接口,进行校验
-  app.post('admin/api/login', async (req, res) => {
+  app.post('/admin/api/login', async (req, res) => {
     const { username, password } = req.body
     //根据用户名找用户(因为密码被散列，只能通过用户名找)
-    const AdminUser = require('../../models/AdminUser')
+
     //查找条件用{key:value}表示
     //因为数据库中的密码设置了不允许查询，所以这里要特别查询出来
     const user = await AdminUser.findOne({ username }).select('+password')
+    // assert(user, res.status(422), '用户不存在')
     if (!user) {
       res.status(422).send({
         message: '用户不存在'
@@ -79,18 +103,29 @@ module.exports = app => {
     //校验密码
     //compareSync返回布尔值
     const isValid = require('bcrypt').compareSync(password, user.password)
+    // assert(isValid, res.status(422), '密码错误')
     if (!isValid) {
       return res.status(422).send({
         message: '密码错误'
       })
     }
     //返回token
-    const jwt = require('jsonwebtoken')
+
     const token = jwt.sign({
       id: user._id,
     }, app.get('secret'))
 
-    res.send(token)
+    res.send({ token })
+
+
+    //错误处理函数
+    // assert粗暴的抛出了异常，捕获这个异常，然后把错误信息已json的形式发给后端
+    app.use(async (err, req, res, next) => {
+      //捕获所有异常，可能没有状态码
+      res.status(err.statusCode || 500).send({
+        message: err.message
+      })
+    })
   })
 }
 

@@ -2,7 +2,8 @@
   <el-container style="height: 100vh; border: 1px solid #eee">
     <el-aside width="200px"
               style="background-color: rgb(238, 241, 246)">
-      <el-menu :default-openeds="['1']" unique-opened 
+      <el-menu :default-openeds="['1']"
+               unique-opened
                router
                :default-active="$route.path">
         <el-submenu index="1">
