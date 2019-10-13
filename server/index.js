@@ -10,5 +10,7 @@ app.listen(3000, () => {
 })
 //引入admin下的index.js
 require('./routes/admin')(app)
+//引入web下的index.justify
+require('./routes/web/index.js')(app)
 //引入mongoDB数据库
 require('./plugins/db')(app)

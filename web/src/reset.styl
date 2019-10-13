@@ -15,6 +15,9 @@ body{
 a{
   color:#999
 }
+p{
+  line-height:2.5em;
+}
 button{
   border:none;
   border-radius: 3px
@@ -28,6 +31,22 @@ button{
 .h100{
   height:100%
   }
+.line-height-1{
+  line-height:10px
+}
+
+//处理单行文本溢出
+.text-ellipsis{
+  display:inline-block;
+  text-overflow:ellipsis;
+  overflow:hidden;
+  white-space:nowrap
+
+}
+//定义下边框线
+.border-bottom{
+  border-bottom:2px solid #9fa0a0
+}
 
 //定义颜色工具类
 colors={
@@ -37,7 +56,11 @@ colors={
   'grey-dark':#ededed,
   'grey-light':#f9f9f9,
   'grey':#999,
-  'dark':#212222
+  'dark':#212222,
+  'primary-dark':#000,
+  'tip':#464f73,
+  'article-tit':#4394e4
+  'article-time':#9fa0a0
   }
 
 
@@ -120,9 +143,9 @@ spacing-types={
 }
 spacing-directions={
   't':top,
-  // 'r':right,
+  'r':right,
   'b':bottom,
-  // 'l':left
+  'l':left
 }
 spacing-base-size=1rem;
 spacing-sizes={
@@ -131,7 +154,8 @@ spacing-sizes={
   '2':0.15,
   '3':0.2,
   '4':0.25,
-  '5':0.3
+  '5':0.3,
+  '6':0.4
 }
 
 //三层循环，.m-t-1格式的类，表示margin-top:xx

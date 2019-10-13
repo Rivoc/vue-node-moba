@@ -43,4 +43,5 @@ const schema = new mongoose.Schema({
     description: { type: String }
   }]
 })
+//手动指定名称，防止连表查询失败
 module.exports = mongoose.model('Hero', schema)

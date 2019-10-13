@@ -18,12 +18,12 @@
     </div>
     <div class="icons-container">
       <!-- 开始图标 -->
-      <div class="nav-icons bg-white m-t-2 p-t-3 d-flex flex-wrap">
-        <div class="icon text-center m-b-3 border-right"
+      <div class="nav-icons bg-white m-t-2 p-t-3 p-b-3 d-flex flex-wrap">
+        <div class="icon  m-b-5 border-right d-flex flex-column jc-center ai-center"
              v-for="n in 11"
              :key="n">
           <i class="sprite sprite-news"></i>
-          <div class="fs-md text-grey">爆料站</div>
+          <div class="fs-md text-grey ">爆料站</div>
         </div>
       </div>
       <!-- 结束图标 -->
@@ -33,60 +33,61 @@
       </div>
     </div>
     <!-- 图标区域结束 -->
-    <!-- 卡片 -->
-    <m-card title="新闻资讯"
-            icon="
-\ue672">
-      <div class="nav d-flex jc-between fs-lg">
-        <div class="nav-item">
-          <div class="nav-link">热门</div>
-        </div>
-        <div class="nav-item">
-          <div class="nav-link">新闻</div>
-        </div>
-        <div class="nav-item">
-          <div class="nav-link">公告</div>
-        </div>
-        <div class="nav-item">
-          <div class="nav-link">活动</div>
-        </div>
-        <div class="nav-item">
-          <div class="nav-link">赛事</div>
-        </div>
-      </div>
+    <!-- 卡片组件 -->
+    <!-- 新闻列表 -->
+    <m-list-card icon="&#xe672;"
+                 title="新闻资讯"
+                 :categories="newsCats"
+                 class="py-3 px-6 bg-white mt-3">
+      <!-- 把home主页的数据传给子组件，子组件循环的时候再把数据通过具名slot绑定传到home又进行循环展示 -->
+      <!-- 父组件不通过循环就拿到子组件循环后的每个category -->
+      <template #items="{category}">
+        <router-link tag="div"
+                     :to="`/articles/${news._id}`"
+                     v-for="(news,i) in category.newsList"
+                     :key="i"
+                     class="m-t-5 d-flex">
+          <span class="text-tip">[{{news.categoryName}}]</span>
+          <span class="mx-1">|</span>
+          <span class='flex-1 text-ellipsis'>{{news.title}}</span>
+          <span class="m-l-1">{{news.createdAt|date}}</span>
+        </router-link>
 
-      <div class="p-t-3">
-        <swiper>
-          <swiper-slide v-for="n in 5"
-                        :key="n"
-                        class="fs-xl">
-            <div>
-              <span>新闻</span>
-              <span>|</span>
-              <span>阿斯顿撒多撒大多多多多多多多多</span>
-              <span>10/10</span>
-            </div>
-            <div>
-              <span>新闻</span>
-              <span>|</span>
-              <span>阿斯顿撒多撒大多多多多多多多多</span>
-              <span>10/10</span>
-            </div>
-            <div>
-              <span>新闻</span>
-              <span>|</span>
-              <span>阿斯顿撒多撒大多多多多多多多多</span>
-              <span>10/10</span>
-            </div>
-          </swiper-slide>
-        </swiper>
-      </div>
-    </m-card>
+      </template>
 
+    </m-list-card>
+
+    <!-- 英雄列表 -->
+    <m-list-card icon="&#xe672;"
+                 title="英雄列表"
+                 :categories="heroCats"
+                 class="py-3 px-6 bg-white mt-3">
+      <template #items="{category}">
+        <div class="d-flex flex-wrap  avatar-container">
+          <div v-for="
+             (hero,i)
+             in
+             category.heroList"
+               :key="i"
+               class="m-t-5 wrapper">
+            <div class="d-flex text-center flex-column">
+              <img :src="hero.avatar"
+                   alt=""
+                   width="100%">
+              <div>{{hero.name}}</div>
+            </div>
+
+          </div>
+        </div>
+
+      </template>
+
+    </m-list-card>
   </div>
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   data () {
     return {
@@ -96,11 +97,43 @@ export default {
         loop: true,
         pagination: {
           el: '.swiper-pagination',
-
         }
-      }
+      },
+      newsCats: [
+        // {
+        //   name: '热门',
+        //   newsList: new Array(5).fill({}).map(v => ({
+        //     categoryName: '公告',
+        //     title: 'fsfdsfdsfdsf',
+        //     date: '10/10'
+        //   }))
+        // },
+
+      ],
+      heroCats: []
     }
-  }
+  },
+  filters: {
+    date (val) {
+      return moment(val).format('MM/DD')
+    }
+  },
+  created () {
+    this.fetchNewsCats()
+    this.fetchHeroCats()
+
+  },
+  methods: {
+    async fetchNewsCats () {
+      const res = await this.$http.get('news/list')
+      this.newsCats = res.data
+    },
+    async fetchHeroCats () {
+      const res = await this.$http.get('heroes/list')
+      this.heroCats = res.data
+
+    }
+  },
 }
 </script>
 <style lang="stylus" scoped>
@@ -156,6 +189,13 @@ export default {
   .folding {
     height: 0.6rem;
     line-height: 0.6rem;
+  }
+}
+
+.avatar-container {
+  .wrapper {
+    width: 18%;
+    margin-right: 0.134rem;
   }
 }
 </style>
