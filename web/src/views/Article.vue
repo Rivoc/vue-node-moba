@@ -7,21 +7,25 @@
       <div class="text-article-time m-r-1">2016/10/10</div>
     </div>
     <!-- 文章主体 -->
-    <div class="article-body fs-sm py-3 px-5"
+    <div class="article-body fs-sm py-3 px-5 "
          v-html="model.body">
-    </div>
 
+    </div>
     <!-- 底部链接文章 -->
-    <div class="article-related">
-      <i class="iconfont"></i><span class="fs-md text-article-tit">相关资讯</span>
+    <div class="article-related py-3 px-5 fs-md">
+      <div class="m-b-5">
+        <i class="iconfont"></i><span class="text-article-tit">相关资讯</span>
+      </div>
+
       <router-link tag="div"
-                   :to='`articles/${item._id}`'
+                   :to='`/articles/${item._id}`'
                    v-for="(item,index) in model.related"
                    :key="index"
-                   class="text-primary-dark fs-md">
+                   class="text-primary-dark m-b-3">
         {{item.title}}
       </router-link>
     </div>
+
   </div>
 
 </template>
@@ -49,6 +53,7 @@ export default {
   watch: {
     id () {
       this.fetchArticle()
+      window.scrollTo(0, 0)
     }
   }
 }
@@ -57,17 +62,5 @@ export default {
 .article-header {
   height: 0.64rem;
   line-height: 0.64rem;
-}
-
-.article-body {
-  img {
-    max-width: 100%;
-    heifht: auto;
-  }
-
-  iframe {
-    width: 100%;
-    height: auto;
-  }
 }
 </style>

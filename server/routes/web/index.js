@@ -2,6 +2,7 @@ module.exports = app => {
   const router = require('express').Router()
   const Article = require('../../models/Article')
   const Hero = require('../../models/Hero')
+  const Item = require('../../models/Item')
   const Category = require('../../models/Category')
 
   app.use('/web/api', router)
@@ -111,8 +112,11 @@ module.exports = app => {
       categories: { $in: data.categories }
     }).limit(2)
     res.send(data)
-
-
+  })
+  //英雄详情接口
+  router.get('/heroes/:id', async (req, res) => {
+    const data = await Hero.findById(req.params.id).populate('categories partners.hero items1 items2').lean()
+    res.send(data)
   })
 
 }

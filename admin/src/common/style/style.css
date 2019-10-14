@@ -17,7 +17,7 @@
   text-align: center;
 }
 .avatar {
-  width: 6rem;
+  width: auto;
   height: 6rem;
   display: block;
 }

@@ -9,7 +9,7 @@ body{
   margin:0;
   padding:0;
   font-family:Arial,Helvetica,sans-serif;
- 
+ font-size:0.26rem;
   background-color:#f1f1f1;
 }
 a{
@@ -21,6 +21,16 @@ p{
 button{
   border:none;
   border-radius: 3px
+}
+.lg-btn{
+  height:0.76rem;
+  line-height:0.76rem;
+  background-color:#fcfcfc
+  border:1px solid #e2e2e2
+}
+.btnActive{
+  border-radius: 50%;
+  border:6px solid #db9e3f!important;
 }
 .border-right{
   border-right:3px solid #e9ecee
@@ -34,6 +44,11 @@ button{
 .line-height-1{
   line-height:10px
 }
+.line-height-3{
+  line-height:0.3rem}
+.ql-align-center{
+  text-align:center
+  }
 
 //处理单行文本溢出
 .text-ellipsis{
@@ -43,9 +58,16 @@ button{
   white-space:nowrap
 
 }
+.iconfont{
+  font-size: 0.26rem;
+  margin-right:0.1rem
+  }
 //定义下边框线
 .border-bottom{
   border-bottom:2px solid #9fa0a0
+}
+.border-bottom-1{
+  border-bottom: 1px solid #d4d9de
 }
 
 //定义颜色工具类
@@ -61,6 +83,13 @@ colors={
   'tip':#464f73,
   'article-tit':#4394e4
   'article-time':#9fa0a0
+  'o-red':#791a16,
+  'o-blue':#1f3695,
+  'o-brown':#805300,
+  'o-grey':#33332c,
+  'skillName': #343440,
+  'btn':#fcfcfc,
+  
   }
 
 
@@ -89,10 +118,12 @@ base-font-size=1rem,
 font-size={
   'xs':0.12,  //12px
   'sm':0.16,//16px
-  'md':0.24,       //24px
+  'mmd':0.22,//22px
+  'md':0.24,//24px
   'lg':0.26,   //26px
   'xl':0.28,   //28px
   'xxl':0.32//32px
+  'xxxl':0.34//34px
 }
 
 for size-key,size in font-size{
@@ -155,7 +186,8 @@ spacing-sizes={
   '3':0.2,
   '4':0.25,
   '5':0.3,
-  '6':0.4
+  '6':0.4,
+  '7':0.5
 }
 
 //三层循环，.m-t-1格式的类，表示margin-top:xx

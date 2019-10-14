@@ -28,6 +28,22 @@
                  class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
+          <!-- 英雄大图 -->
+          <el-form-item label="Banner">
+            <!-- action 上传的接口地址 -->
+            <el-upload class="avatar-uploader"
+                       :action="uploadUrl"
+                       :headers="getAuthHeaders()"
+                       :show-file-list="false"
+                       :on-success="res=>model.banner=res.url">
+              <img v-if="model.banner"
+                   :src="model.banner"
+                   class="avatar">
+              <i v-else
+                 class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item>
+
           <el-form-item label="类型">
             <el-select v-model="model.categories"
                        multiple>
@@ -133,6 +149,12 @@ this.$set(Object, key, value)-->
                      class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
+              <el-form-item label="冷却值">
+                <el-input v-model="item.delay"></el-input>
+              </el-form-item>
+              <el-form-item label="消耗">
+                <el-input v-model="item.cost"></el-input>
+              </el-form-item>
               <el-form-item label="描述">
                 <el-input type="textarea"
                           v-model="item.description"></el-input>
@@ -147,7 +169,42 @@ this.$set(Object, key, value)-->
                            @click="model.skills.splice(i,1)">删除</el-button>
               </el-form-item>
             </el-col>
+          </el-row>
+        </el-tab-pane>
 
+        <!-- 最佳搭档 -->
+        <el-tab-pane label="最佳搭档"
+                     name="partners">
+          <el-button type="text"
+                     @click="model.partners.push({})"><i class="el-icon-plus"></i>添加搭档
+          </el-button>
+          <el-row type="flex"
+                  style="flex-wrap:wrap"
+                  :gutter="100">
+            <el-col :md="
+                  12"
+                    v-for="(item,i) in model.partners"
+                    :key="i">
+              <el-form-item label="英雄">
+                <!-- filterable 可以搜索的下拉框 -->
+                <el-select filterable
+                           v-model="item.hero">
+                  <el-option v-for="hero in heroes"
+                             :key="hero._id"
+                             :value="hero._id"
+                             :label="hero.name"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="描述">
+                <el-input v-model="item.description"
+                          type="textarea"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button sizee="small"
+                           type="danger"
+                           @click="model.partners.splice(i,1)">删除</el-button>
+              </el-form-item>
+            </el-col>
           </el-row>
         </el-tab-pane>
 
@@ -169,9 +226,12 @@ export default {
     return {
       categories: [],
       items: [],
+      heros: [],
       model: {
         name: '',
         avatar: '',
+        banner: '',
+        partners: '',
         scores: {
           difficult: 0,
           skills: 0,
@@ -220,10 +280,17 @@ export default {
       const res = await this.$http.get(`rest/items`)
       this.items = res.data
     },
+    //提交事件
     afterUpload (res) {
       //显式赋值
       // this.$set(this.model, 'avatar', res.url)
       this.model.avatar = res.url
+    },
+    //获取所有英雄数据
+    async fetchHeroes () {
+      const res = await this.$http.get('rest/heroes')
+      this.heroes = res.data
+
     }
   },
   created () {
@@ -231,6 +298,7 @@ export default {
     this.id && this.fetch()
     this.fetchCategories()
     this.fetchItems()
+    this.fetchHeroes()
 
 
   }

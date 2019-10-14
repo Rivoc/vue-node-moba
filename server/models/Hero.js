@@ -6,6 +6,7 @@ const schema = new mongoose.Schema({
   avatar: { type: String },
   //英雄称号
   title: { type: String },
+  banner: { type: String },
   //一个英雄可能关联多个分类
   //ref:关联的模型的名称
   categories: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
@@ -21,12 +22,15 @@ const schema = new mongoose.Schema({
     {
       icon: { type: String },
       name: { type: String },
+      delay: { type: String },
+      cost: { type: String },
       description: { type: String },
       tips: { type: String }
     }
   ],
   //顺风/逆风装备，装备物品在Item数据库中
   //顺风是1，逆风是2
+  //ref的属性值必！须！小！写！！！
   items1: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Item' }],
   items2: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Item' }],
   //使用技巧

@@ -64,12 +64,11 @@
                  class="py-3 px-6 bg-white mt-3">
       <template #items="{category}">
         <div class="d-flex flex-wrap  avatar-container">
-          <div v-for="
-             (hero,i)
-             in
-             category.heroList"
-               :key="i"
-               class="m-t-5 wrapper">
+          <router-link tag="div"
+                       :to="`/heroes/${hero._id}`"
+                       v-for="(hero,i) in category.heroList"
+                       :key="i"
+                       class="m-t-5 wrapper">
             <div class="d-flex text-center flex-column">
               <img :src="hero.avatar"
                    alt=""
@@ -77,7 +76,7 @@
               <div>{{hero.name}}</div>
             </div>
 
-          </div>
+          </router-link>
         </div>
 
       </template>
